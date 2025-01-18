@@ -26,7 +26,8 @@ namespace wadtek
                                                                                : byte_order::undefined;
     }
 
-    template <class IntType> IntType read_int(const uint8_t *data)
+    template <class IntType>
+    IntType read_int(const uint8_t *data)
     {
         IntType value = *reinterpret_cast<const IntType *>(data);
         // TODO: byte ordering
@@ -38,16 +39,15 @@ namespace wadtek
     {
         std::string result;
         result.reserve(size);
-        std::for_each(
-            data, 
-            data + size, 
-            [&result](uint8_t c) 
-            { 
-                if(c != 0)
-                {
-                    result.push_back(static_cast<char>(c)); 
-                }
-            });
+        uint8_t byte;
+        for (size_t offset = 0; offset < size; ++offset)
+        {
+            byte = *(data + offset);
+            if (byte != 0)
+            {
+                result.push_back(static_cast<char>(byte));
+            }
+        }
         return result;
     }
 }
