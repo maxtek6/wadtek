@@ -68,9 +68,9 @@ wadtek::file::file(const std::string &path)
     _lumps.reserve(lump_count);
     while(_lumps.size() < _lumps.capacity())
     {
-        offset = wadtek::read_int<uint32_t>(lump_marker + 8);
-        size_t size = wadtek::read_int<uint32_t>(lump_marker + 12);
-        std::string name = wadtek::read_string(lump_marker, 8);
+        offset = wadtek::read_int<uint32_t>(lump_marker);
+        size_t size = wadtek::read_int<uint32_t>(lump_marker + 8);
+        std::string name = wadtek::read_string(lump_marker + 12, 8);
         _lumps.emplace_back(name, data + offset, size);
         lump_marker += 16;
     }
