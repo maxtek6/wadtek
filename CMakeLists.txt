@@ -26,3 +26,10 @@ target_link_libraries(wadtek
     PUBLIC
     mio::mio
 )
+
+add_executable(dumpwad main.cpp)
+
+target_link_libraries(dumpwad 
+    PRIVATE
+    wadtek
+)

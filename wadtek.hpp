@@ -37,10 +37,17 @@ namespace wadtek
         ~file() = default;
 
         const std::string& identification() const;
+
+        lump *data() const;
+        size_t size() const;
+
         const_iterator begin() const;
         const_iterator end() const;
     private:
+        void read_header();
+        void read_lumps();
         std::string _identification;
+        const uint8_t* _first_lump;
         std::unique_ptr<void,std::function<void(void*)>> _handle;
         std::vector<lump> _lumps;
     };

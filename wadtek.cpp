@@ -52,27 +52,38 @@ size_t wadtek::lump::size() const
 }
 
 wadtek::file::file(const std::string &path)
-    : _handle(new mio::basic_mmap<mio::access_mode::read, uint8_t>(path))
+    : _handle(make_handle(path))
 {
-    size_t offset = 0;
-    int32_t lump_count = 0;
-    int32_t lump_offset = 0;
+    read_header();
+    read_lumps();
+}
+
+void wadtek::file::read_header()
+{
     const uint8_t *data = get_handle(_handle)->data();
-    const uint8_t *lump_marker;
     _identification = wadtek::read_string(data, 4);
-    offset += 4;
-    lump_count = wadtek::read_int<int32_t>(data + offset);
-    offset += 4;
-    lump_offset = wadtek::read_int<int32_t>(data + offset);
-    lump_marker = data + lump_offset;
-    _lumps.reserve(lump_count);
+    const int32_t num_lumps = wadtek::read_int<int32_t>(data + 4);
+    const int32_t dir_offset = wadtek::read_int<int32_t>(data + 8);
+    _first_lump = data + static_cast<size_t>(dir_offset);
+    _lumps.reserve(num_lumps);
+}
+
+void wadtek::file::read_lumps()
+{
+    const uint8_t *head = get_handle(_handle)->data();
+    const uint8_t* marker = _first_lump;
     while(_lumps.size() < _lumps.capacity())
     {
-        offset = static_cast<size_t>(wadtek::read_int<int32_t>(lump_marker));
-        size_t size = static_cast<size_t>(wadtek::read_int<int32_t>(lump_marker + 8));
-        std::string name = wadtek::read_string(lump_marker + 12, 8);
-        _lumps.emplace_back(name, data + offset, size);
-        lump_marker += 16;
+        int32_t file_pos;
+        int32_t size;
+        std::string name;
+        file_pos = read_int<int32_t>(marker);
+        marker += 4;
+        size = read_int<int32_t>(marker);
+        marker += 4;
+        name = read_string(marker, 8);
+        marker += 8;
+        _lumps.emplace_back(name, head + static_cast<size_t>(file_pos), static_cast<size_t>(size));
     }
 }
 
