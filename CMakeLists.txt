@@ -24,5 +24,5 @@ target_include_directories(wadtek
 
 target_link_libraries(wadtek 
     PUBLIC
-    mio
+    mio::mio
 )

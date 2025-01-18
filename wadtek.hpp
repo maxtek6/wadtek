@@ -2,6 +2,7 @@
 #define WADTEK_HPP
 
 #include <algorithm>
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -40,7 +41,7 @@ namespace wadtek
         const_iterator end() const;
     private:
         std::string _identification;
-        std::unique_ptr<void> _handle;
+        std::unique_ptr<void,std::function<void(void*)>> _handle;
         std::vector<lump> _lumps;
     };
 }

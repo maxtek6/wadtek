@@ -1,9 +1,16 @@
 #include "wadtek.hpp"
 #include "bytes.hpp"
 
-#include <mmap.hpp>
+#include <mio/mmap.hpp>
 
-static mio::basic_mmap<mio::access_mode::read, uint8_t> *get_handle(std::unique_ptr<void> &handle)
+static std::unique_ptr<void, std::function<void(void *)>> make_handle(const std::string &path)
+{
+    return std::unique_ptr<void, std::function<void(void *)>>(
+        new mio::basic_mmap<mio::access_mode::read, uint8_t>(path), 
+        [](void *handle) { delete reinterpret_cast<mio::basic_mmap<mio::access_mode::read, uint8_t> *>(handle); });
+}
+
+static mio::basic_mmap<mio::access_mode::read, uint8_t> *get_handle(std::unique_ptr<void, std::function<void(void *)>> &handle)
 {
     return reinterpret_cast<mio::basic_mmap<mio::access_mode::read, uint8_t> *>(handle.get());
 }

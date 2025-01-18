@@ -28,11 +28,8 @@ namespace wadtek
 
     template <class IntType> IntType read_int(const uint8_t *data)
     {
-        IntType value = *reinterpret_cast<IntType *>(data);
-        if constexpr (host_byte_order() == byte_order::big_endian)
-        {
-            std::reverse(reinterpret_cast<uint8_t *>(&value), reinterpret_cast<uint8_t *>(&value) + sizeof(IntType));
-        }
+        IntType value = *reinterpret_cast<const IntType *>(data);
+        // TODO: byte ordering
         return value;
     }
 
