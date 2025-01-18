@@ -17,10 +17,12 @@ add_library(wadtek STATIC
     wadtek.cpp
 )
 
-target_include_directories(wadtek PUBLIC
+target_include_directories(wadtek 
+    PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(wadtek PUBLIC
+target_link_libraries(wadtek 
+    PUBLIC
     mio
 )

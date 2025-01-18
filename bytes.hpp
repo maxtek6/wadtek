@@ -26,10 +26,10 @@ namespace wadtek
                                                                                : byte_order::undefined;
     }
 
-    template <class IntType, byte_order ByteOrder = host_byte_order()> IntType read_int(uint8_t *data)
+    template <class IntType> IntType read_int(const uint8_t *data)
     {
         IntType value = *reinterpret_cast<IntType *>(data);
-        if constexpr (ByteOrder == byte_order::big_endian)
+        if constexpr (host_byte_order() == byte_order::big_endian)
         {
             std::reverse(reinterpret_cast<uint8_t *>(&value), reinterpret_cast<uint8_t *>(&value) + sizeof(IntType));
         }
@@ -37,7 +37,7 @@ namespace wadtek
     }
 
     // TODO: possibly add template for execution policy
-    std::string read_string(uint8_t *data, size_t size)
+    std::string read_string(const uint8_t *data, size_t size)
     {
         std::string result;
         result.reserve(size);
