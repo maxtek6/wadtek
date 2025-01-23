@@ -8,29 +8,30 @@
 
 namespace wadtek
 {
-    enum class byte_order
+    std::function<void(uint8_t*,size_t)> get_swap_func()
     {
-        little_endian,
-        big_endian,
-        undefined
-    };
-
-    constexpr byte_order host_byte_order()
-    {
-        union
+        uint16_t test = 0x0102;
+        uint8_t *test_ptr = reinterpret_cast<uint8_t *>(&test);
+        std::function<void(uint8_t*,size_t)> swap_func;
+        if (test_ptr[0] != 0x02)
         {
-            uint32_t value;
-            uint8_t c[4];
-        } test = {1};
-        return (test.c[0] == 1) ? byte_order::little_endian : (test.c[3] == 1) ? byte_order::big_endian
-                                                                               : byte_order::undefined;
+            swap_func = [](uint8_t *data, size_t size) {
+                std::reverse(data, data + size);
+            };
+        }
+        return swap_func;
     }
+    
 
     template <class IntType>
     IntType read_int(const uint8_t *data)
     {
+        static auto swap_func = get_swap_func();
         IntType value = *reinterpret_cast<const IntType *>(data);
-        // TODO: byte ordering
+        if(swap_func)
+        {
+            swap_func(reinterpret_cast<uint8_t *>(&value), sizeof(IntType));
+        }
         return value;
     }
 
