@@ -1,18 +1,44 @@
 #include <wadtek.hpp>
 
+#include <iomanip>
 #include <iostream>
 
-static void dumpwad_main(const std::string& path)
+static const std::string line_break("+------------------------------+");
+
+static void print_header(const wadtek::file &file)
 {
-    wadtek::file file(path);
-    std::cerr << "WAD file: " << file.identification() << std::endl;
-    std::for_each(file.begin(), file.end(), [](const wadtek::lump& lump)
-    {
-        std::cout << lump.name() << " (" << lump.size() << " bytes)" << std::endl;
-    });
+    std::cout << line_break << std::endl 
+              << "| " << std::setw(15) << std::left << file.identification() 
+              << file.size() << std::setw(10)  << std::left  << " lumps"
+              << "|" << std::endl
+              << "|" << std::setw(34) << std::right 
+              << "|" << std::endl
+              << "| " << std::setw(15) << std::left << "name" 
+              << std::setw(15) << std::left << "size" 
+              << "|" << std::endl
+              << line_break << std::endl;
 }
 
-int main(int argc, char** argv) 
+static void print_lumps(const wadtek::file &file)
+{
+    for (const auto &lump : file)
+    {
+        std::cout << "| " << std::setw(15) << std::left << lump.name() 
+                  << std::setw(15) << std::left << lump.size() 
+                  << std::setw(3) << std::right << "|" 
+                  << std::endl;
+    }
+    std::cout << line_break << std::endl;
+}
+
+static void dumpwad_main(const std::string &path)
+{
+    wadtek::file file(path);
+    print_header(file);
+    print_lumps(file);
+}
+
+int main(int argc, char **argv)
 {
     if (argc > 1)
     {

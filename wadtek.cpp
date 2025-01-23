@@ -92,6 +92,16 @@ const std::string &wadtek::file::identification() const
     return _identification;
 }
 
+const wadtek::lump *wadtek::file::data() const
+{
+    return _lumps.data();
+}
+
+size_t wadtek::file::size() const
+{
+    return _lumps.size();
+}
+
 wadtek::file::const_iterator wadtek::file::begin() const
 {
     return _lumps.begin();

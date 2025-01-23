@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 
 project(wadtek)
 
+option(WADTEK_BUILD_DUMPWAD "Build dumpwad" OFF)
+
 include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -27,9 +29,10 @@ target_link_libraries(wadtek
     mio::mio
 )
 
-add_executable(dumpwad main.cpp)
-
-target_link_libraries(dumpwad 
-    PRIVATE
-    wadtek
+if(WADTEK_BUILD_DUMPWAD)
+    add_executable(dumpwad main.cpp)
+    target_link_libraries(dumpwad 
+        PRIVATE
+        wadtek
 )
+endif()

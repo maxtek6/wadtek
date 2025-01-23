@@ -38,7 +38,7 @@ namespace wadtek
 
         const std::string& identification() const;
 
-        lump *data() const;
+        const lump *data() const;
         size_t size() const;
 
         const_iterator begin() const;
