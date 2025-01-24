@@ -35,7 +35,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(mio)
 
-add_library(wadtek STATIC
+add_library(wadtek_a STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/bytes.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/wadtek.cpp
 )
